@@ -9,15 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@notionhq/client": "^4.0.1",
+    "@notionhq/client": "^4.0.2",
     "next": "15.4.1",
+    "notion-client": "^7.4.3",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "react-notion-x": "^7.4.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/prismjs": "^1.26.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
