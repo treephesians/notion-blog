@@ -22,6 +22,138 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: sans-serif;
+  font-family: sans-serif !important;
   font-weight: 500;
+}
+
+.notion-page {
+  font-family: sans-serif !important;
+  font-weight: 600 !important;
+  max-width: 800px !important;
+  width: 100% !important;
+  color: #dddddd !important;
+}
+
+.notion-bookmark {
+  border-radius: 10px !important;
+}
+
+.notion-external-block {
+  border-radius: 10px !important;
+  border: 0.1px solid rgba(221, 221, 221, 0.3) !important;
+}
+
+.notion-page img {
+  border-radius: 5px !important;
+}
+
+.notion-page,
+.notion-page-content,
+.notion-page-content-inner {
+  max-width: 800px !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.notion-text {
+  margin-bottom: 0.3rem !important;
+}
+
+.notion-h1 {
+  margin-bottom: 0.8rem !important;
+}
+
+.notion-h2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.notion-h3 {
+  margin-bottom: 0.3rem !important;
+}
+
+.notion-h-title {
+  font-weight: 700 !important;
+}
+
+.notion-red_background {
+  background-color: #4c2826 !important;
+}
+
+.notion-teal_background {
+  background-color: #1e352b !important;
+}
+
+.notion-blue_background {
+  background-color: #053444 !important;
+}
+
+.notion-purple_background {
+  background-color: #35293f !important;
+}
+
+.notion-pink_background {
+  background-color: #472734 !important;
+}
+
+.notion-yellow_background {
+  background-color: #4f3a26 !important;
+}
+
+.notion-yellow {
+  color: #cb8a4a !important;
+}
+
+.notion-red {
+  color: #eb4b4e !important;
+}
+
+.notion-blue {
+  color: #0093ca !important;
+}
+
+.notion-teal {
+  color: #3d936a !important;
+}
+
+.notion-purple {
+  color: #9263c8 !important;
+}
+
+.notion-pink {
+  color: #d44d89 !important;
+}
+
+table,
+tbody,
+td,
+th {
+  border: 2px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.notion-external-block-desc {
+  color: #bbbbbb !important;
+}
+
+.notion-code {
+  overflow-x: auto !important;
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
+}
+
+.notion-code::-webkit-scrollbar {
+  display: none !important; /* Chrome/Safari */
+}
+
+.notion-code pre {
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.notion-code pre::-webkit-scrollbar {
+  display: none !important;
+}
+
+.notion-quote {
+  font-size: 1rem !important;
 }
