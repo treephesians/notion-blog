@@ -33,3 +33,28 @@ export type NotionTagType =
   MultiSelectPropertyItemObjectResponse["multi_select"][0];
 
 export type NotionFilter = QueryDatabaseParameters["filter"];
+
+export type PostHeaderType = {
+  id: string;
+  url: string;
+  cover?: { file?: { url: string }; external?: { url: string } };
+  properties: {
+    이름: { type: "title"; title: { plain_text: string }[] };
+    태그: { type: "multi_select"; multi_select: NotionTagType[] };
+  };
+};
+
+export type NotionPageHeader = {
+  id: string;
+  cover?: {
+    type: "file" | "external";
+    file?: { url: string; expiry_time?: string };
+    external?: { url: string };
+  };
+  properties: {
+    이름: { type: "title"; title: { plain_text: string }[] };
+    태그: { type: "multi_select"; multi_select: NotionTagType[] };
+    작성일: { type: "date"; date: { start: string; end?: string } | null };
+  };
+  url: string;
+};
