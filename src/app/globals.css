@@ -138,6 +138,7 @@ th {
   overflow-x: auto !important;
   scrollbar-width: none !important; /* Firefox */
   -ms-overflow-style: none !important; /* IE/Edge */
+  border-radius: 5px !important;
 }
 
 .notion-code::-webkit-scrollbar {
