@@ -38,7 +38,6 @@ export default async function Page({ params }: PostPageProps) {
 const PostHeader = ({ header }: { header: PostHeaderProps }) => {
   return (
     <div className="max-w-[820px] w-full mx-auto p-6">
-      {/* 커버 이미지 */}
       {header.coverUrl && (
         <div className="relative aspect-[18/9] w-full rounded-2xl overflow-hidden mb-8">
           <Image
@@ -50,24 +49,20 @@ const PostHeader = ({ header }: { header: PostHeaderProps }) => {
           />
         </div>
       )}
-      {/* 제목 */}
       <h1 className="text-4xl font-bold text-white mb-8">{header.title}</h1>
 
-      {/* 메타데이터 3열 그리드 */}
       <div className="grid grid-cols-[auto_auto_1fr] gap-x-4 gap-y-4 mb-8 items-start">
-        {/* 작성일 */}
         <span className="text-gray-400">📅</span>
         <span className="text-base font-medium text-gray-400">작성일</span>
         <span className="text-base text-gray-300">{header.createdDate}</span>
 
-        {/* 태그 */}
         <span className="text-gray-400">🏷️</span>
         <span className="text-base font-medium text-gray-400">태그</span>
         <div className="flex flex-wrap gap-2">
           {header.tags?.map((tag) => (
             <span
               key={tag.id}
-              className={`!text-base ${getTagClasses(tag.color)}`}
+              className={`!text-sm ${getTagClasses(tag.color)}`}
             >
               {tag.name}
             </span>

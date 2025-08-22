@@ -58,3 +58,23 @@ export type NotionPageHeader = {
   };
   url: string;
 };
+
+export type NotionProjectHeader = {
+  id: string;
+  cover?: {
+    type: "file" | "external";
+    file?: { url: string; expiry_time?: string };
+    external?: { url: string };
+  };
+  properties: {
+    이름: { type: "title"; title: { plain_text: string }[] };
+    기술: { type: "multi_select"; multi_select: NotionTagType[] };
+    기간: { type: "date"; date: { start: string; end?: string } | null };
+    사이트: { type: "url"; url: string | null };
+    GitHub: { type: "url"; url: string | null };
+    회고: { type: "relation"; relation: { id: string }[] };
+    종류: { type: "select"; select: { name: string; color: string } | null };
+    PIN: { type: "checkbox"; checkbox: boolean };
+  };
+  url: string;
+};
