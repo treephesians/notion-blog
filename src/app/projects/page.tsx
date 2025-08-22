@@ -10,12 +10,13 @@ export default async function ProjectsPage() {
 
   const datas = await fetchNotionDatabaseQuery(databaseId);
 
-  // PIN 속성에 따라 정렬 (PIN된 항목이 먼저 오도록)
   const sortedDatas = sortByPin(datas);
 
   return (
     <main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
-      <h1 className="text-3xl font-bold text-white mb-8">Projects</h1>
+      <h1 className="text-4xl font-bold text-white mb-8 flex justify-center underline">
+        Projects
+      </h1>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         {sortedDatas.map((data: DatabaseObjectResponse) => {
           const project = extractProjectData(data);
