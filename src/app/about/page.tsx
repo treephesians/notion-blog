@@ -7,7 +7,7 @@ import "katex/dist/katex.min.css";
 import dynamic from "next/dynamic";
 
 const AnimatedCanvas = dynamic(
-  () => import("@/components/visuals/AnimatedCanvas")
+  () => import("@/components/animation/AnimatedCanvas")
 );
 
 export default async function Page() {
