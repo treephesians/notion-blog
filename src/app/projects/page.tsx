@@ -2,6 +2,7 @@ import NotionCard from "@/components/notion/NotionCard";
 import { fetchNotionDatabaseQuery } from "@/lib/notion";
 import { DatabaseObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { formatProjectPeriod, sortByPin } from "@/lib/util";
+import { NotionTagType } from "@/types/notion";
 
 export default async function ProjectsPage() {
   const databaseId = process.env.PROJECT_DATABASE_ID;
@@ -19,7 +20,7 @@ export default async function ProjectsPage() {
       </h1>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         {sortedDatas.map((data: DatabaseObjectResponse) => {
-          const project = extractProjectData(data);
+          const project = extractProjectData(data as unknown as ProjectForView);
 
           return (
             <NotionCard
@@ -39,7 +40,19 @@ export default async function ProjectsPage() {
   );
 }
 
-function extractProjectData(projectData: any) {
+type ProjectForView = {
+  id: string;
+  url: string;
+  cover?: { file?: { url: string }; external?: { url: string } };
+  properties: {
+    이름: { type: "title"; title: { plain_text: string }[] };
+    기술: { type: "multi_select"; multi_select: NotionTagType[] };
+    기간: { type: "date"; date: { start: string; end?: string } | null };
+    PIN: { type: "checkbox"; checkbox: boolean };
+  };
+};
+
+function extractProjectData(projectData: ProjectForView) {
   const coverUrl =
     projectData.cover?.file?.url || projectData.cover?.external?.url || null;
 

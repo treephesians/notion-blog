@@ -4,7 +4,7 @@ import { ExtendedRecordMap } from "notion-types";
 import { NotionRenderer } from "react-notion-x";
 import dynamic from "next/dynamic";
 import Prism from "prismjs";
-(globalThis as any).Prism = Prism;
+(globalThis as unknown as { Prism: typeof Prism }).Prism = Prism;
 
 import "prismjs/components/prism-python";
 
