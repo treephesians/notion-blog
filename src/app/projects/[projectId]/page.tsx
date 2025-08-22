@@ -1,12 +1,16 @@
-import { extractHeaderData, fetchNotionPageQuery, getData } from "@/lib/notion";
+import { fetchNotionPageQuery, getData } from "@/lib/notion";
 
 import "react-notion-x/src/styles.css";
 import "prismjs/themes/prism-tomorrow.css";
 import "katex/dist/katex.min.css";
 import Renderer from "@/components/notion/Render";
 import { NotionProjectHeader, NotionTagType } from "@/types/notion";
-import { getTagClasses, formatProjectPeriod } from "@/lib/util";
-import Image from "next/image";
+import { formatProjectPeriod } from "@/lib/util";
+import CoverImage from "@/components/notion/CoverImage";
+import MetadataRow from "@/components/notion/MetadataRow";
+import TagList from "@/components/notion/TagList";
+import ExternalLink from "@/components/notion/ExternalLink";
+import SingleTag from "@/components/notion/SingleTag";
 
 interface ProjectPageProps {
   params: Promise<{
@@ -82,102 +86,48 @@ const ProjectHeader = ({ header }: { header: ProjectHeaderProps }) => {
   return (
     <div className="max-w-[820px] w-full mx-auto p-6">
       {header.coverUrl && (
-        <div className="relative aspect-[18/9] w-full rounded-2xl overflow-hidden mb-8">
-          <Image
-            src={header.coverUrl}
-            alt={header.title}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 60vw"
-            className="object-cover"
-          />
-        </div>
+        <CoverImage src={header.coverUrl} alt={header.title} />
       )}
 
       <h1 className="text-4xl font-bold text-white mb-8">{header.title}</h1>
 
       <div className="grid grid-cols-[auto_auto_1fr] gap-x-4 gap-y-4 mb-8 items-start">
         {header.period && (
-          <>
-            <span className="text-gray-400">📅</span>
-            <span className="text-base font-medium text-gray-400">기간</span>
+          <MetadataRow icon="📅" label="기간">
             <span className="text-base text-gray-300">{header.period}</span>
-          </>
+          </MetadataRow>
         )}
 
         {header.site && (
-          <>
-            <span className="text-gray-400">🔗</span>
-            <span className="text-base font-medium text-gray-400">사이트</span>
-            <a
-              href={header.site}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-base text-gray-400 hover:text-blue-300"
-            >
-              {header.site}
-            </a>
-          </>
+          <MetadataRow icon="🔗" label="사이트">
+            <ExternalLink href={header.site}>{header.site}</ExternalLink>
+          </MetadataRow>
         )}
 
         {header.github && (
-          <>
-            <span className="text-gray-400">🔗</span>
-            <span className="text-base font-medium text-gray-400">GitHub</span>
-            <a
-              href={header.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-base text-gray-400 hover:text-blue-300"
-            >
-              {header.github}
-            </a>
-          </>
+          <MetadataRow icon="🔗" label="GitHub">
+            <ExternalLink href={header.github}>{header.github}</ExternalLink>
+          </MetadataRow>
         )}
 
         {header.reviewPageId && (
-          <>
-            <span className="text-gray-400">🧠</span>
-            <span className="text-base font-medium text-gray-400">회고</span>
-            <a
-              href={`/posts/${header.reviewPageId}`}
-              className="text-base text-gray-400 hover:text-blue-300"
-            >
-              회고 보기
-            </a>
-          </>
+          <MetadataRow icon="🧠" label="회고">
+            <ExternalLink href={`/posts/${header.reviewPageId}`}>
+              <p>회고 보기</p>
+            </ExternalLink>
+          </MetadataRow>
         )}
 
         {header.tags.length > 0 && (
-          <>
-            <span className="text-gray-400">⚡</span>
-            <span className="text-base font-medium text-gray-400">기술</span>
-            <div className="flex flex-wrap gap-2">
-              {header.tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className={`!text-sm ${getTagClasses(tag.color)}`}
-                >
-                  {tag.name}
-                </span>
-              ))}
-            </div>
-          </>
+          <MetadataRow icon="⚡" label="기술">
+            <TagList tags={header.tags} />
+          </MetadataRow>
         )}
 
         {header.type && (
-          <>
-            <span className="text-gray-400">🎯</span>
-            <span className="text-base font-medium text-gray-400">종류</span>
-            <div>
-              <span
-                className={`!text-sm ${getTagClasses(
-                  header.type.color as NotionTagType["color"]
-                )}`}
-              >
-                {header.type.name}
-              </span>
-            </div>
-          </>
+          <MetadataRow icon="🎯" label="종류">
+            <SingleTag tag={header.type} />
+          </MetadataRow>
         )}
       </div>
 

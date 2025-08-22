@@ -19,7 +19,6 @@ export default async function ProjectsPage() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
         {sortedDatas.map((data: DatabaseObjectResponse) => {
           const project = extractProjectData(data);
-          const isPinned = (data as any).properties?.PIN?.checkbox || false;
 
           return (
             <NotionCard
@@ -30,7 +29,7 @@ export default async function ProjectsPage() {
               tags={project.tags}
               pageId={data.id}
               period={project.createdDate || undefined}
-              isPinned={isPinned}
+              isPinned={project.isPinned}
             />
           );
         })}
@@ -53,12 +52,15 @@ function extractProjectData(projectData: any) {
   const endDate = dateRange?.end;
   const period = startDate ? formatProjectPeriod(startDate, endDate) : null;
 
+  const isPinned = projectData.properties?.PIN?.checkbox || false;
+
   return {
     id: projectData.id,
     coverUrl,
     title,
-    tags: technologies, // 기술을 태그로 사용
-    createdDate: period, // 기간을 생성일로 사용
+    tags: technologies,
+    createdDate: period,
     url: projectData.url,
+    isPinned,
   };
 }

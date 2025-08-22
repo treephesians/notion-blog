@@ -38,7 +38,6 @@ const NotionCard = ({
             className="object-cover transition-transform duration-300 group-hover:scale-[1.05]"
           />
 
-          {/* PIN 별 아이콘 */}
           {isPinned && (
             <div className="absolute top-3 right-3 flex h-6 w-6 items-center justify-center rounded-full bg-yellow-500/90 shadow-lg">
               <svg

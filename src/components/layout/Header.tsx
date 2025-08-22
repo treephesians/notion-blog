@@ -33,12 +33,12 @@ export default function Header() {
             >
               Projects
             </Link>
-            <Link
+            {/* <Link
               href="/books"
               className="text-gray-300 hover:text-white transition-colors duration-200"
             >
               Books
-            </Link>
+            </Link> */}
           </nav>
 
           {/* 모바일 메뉴 버튼 */}
