@@ -3,6 +3,8 @@
 import { ExtendedRecordMap } from "notion-types";
 import { NotionRenderer } from "react-notion-x";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import Image from "next/image";
 import Prism from "prismjs";
 (globalThis as unknown as { Prism: typeof Prism }).Prism = Prism;
 
@@ -23,7 +25,7 @@ interface RendererProps {
 
 const Renderer = ({ recordMap, rootPageId }: RendererProps) => {
   return (
-    <div className="notion__container">
+    <div>
       <NotionRenderer
         recordMap={recordMap}
         darkMode={true}
@@ -32,6 +34,8 @@ const Renderer = ({ recordMap, rootPageId }: RendererProps) => {
         components={{
           Code,
           Equation,
+          nextImage: Image,
+          nextLink: Link,
         }}
       />
     </div>
