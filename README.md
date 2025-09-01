@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### JBLOG
 
-## Getting Started
+Notion을 CMS로 사용하는 Next.js(앱 라우터) 기반의 블로그/프로젝트 포트폴리오입니다. 게시글/프로젝트 메타데이터는 Notion 데이터베이스에서 가져오고, 본문은 react-notion-x로 렌더링합니다.
 
-First, run the development server:
+### 기술 스택
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework**: Next.js 15 (App Router), React 19
+- **Styling**: Tailwind CSS 4
+- **CMS & Rendering**: @notionhq/client, notion-client, react-notion-x, KaTeX, Prism (Tomorrow)
+- **기타**: ofetch 기반 ky shim, TypeScript
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 주요 기능
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **블로그 목록**: Notion DB에서 상태가 "완료"인 글만 필터링하여 표시, 태그/커버 노출
+- **블로그 상세**: 커버/작성일/태그 메타데이터 표시, 본문을 react-notion-x로 렌더링(코드 하이라이트/수식 지원)
+- **프로젝트 목록**: PIN 속성으로 고정된 항목 우선 정렬, 기간/기술 태그 노출
+- **프로젝트 상세**: 기간, 사이트, GitHub, 회고 링크, 종류(select) 등 메타데이터 표시 및 본문 렌더링
+- **이미지 최적화**: Next/Image 사용, S3/외부 도메인 화이트리스트 설정
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 라우팅
 
-## Learn More
+- `/` 블로그 목록
+- `/posts/[pageId]` 글 상세 (Notion Page ID)
+- `/projects` 프로젝트 목록
+- `/projects/[projectId]` 프로젝트 상세 (Notion Page ID)
 
-To learn more about Next.js, take a look at the following resources:
+### 구성 메모
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `next.config.ts`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  - webpack alias로 `ky`를 `src/lib/ky-shim.ts`에 매핑하여 Next 15 환경에서 notion-client의 ky 의존성 문제를 우회합니다.
+  - `images.domains`에 외부 이미지 도메인(S3 등)을 허용합니다.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/lib/ky-shim.ts`
+  - ofetch 기반으로 ky 호환 인터페이스의 `post().json()`만 최소 구현했습니다.

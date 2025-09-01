@@ -1,4 +1,5 @@
 import { extractHeaderData, fetchNotionPageQuery, getData } from "@/lib/notion";
+import { Suspense } from "react";
 
 import "react-notion-x/src/styles.css";
 import "prismjs/themes/prism-tomorrow.css";
@@ -25,15 +26,29 @@ interface PostHeaderProps {
 
 export default async function Page({ params }: PostPageProps) {
   const { pageId } = await params;
-  const data = await getData(pageId);
-  const headerData = await fetchNotionPageQuery(pageId);
-  const header = extractHeaderData(headerData as unknown as NotionPageHeader);
+  // 병렬 시작 (헤더는 Suspense로 뒤늦게 렌더)
+  const headerPromise = fetchNotionPageQuery(pageId);
+  const dataPromise = getData(pageId);
+
   return (
     <main className="bg-[#1D1D1D]">
-      <PostHeader header={header} />
-      <Renderer recordMap={data} rootPageId={pageId} />
+      <Suspense>
+        <PostHeaderSuspense headerPromise={headerPromise} />
+      </Suspense>
+
+      <Renderer recordMap={await dataPromise} rootPageId={pageId} />
     </main>
   );
+}
+
+async function PostHeaderSuspense({
+  headerPromise,
+}: {
+  headerPromise: Promise<unknown>;
+}) {
+  const headerData = (await headerPromise) as unknown as NotionPageHeader;
+  const header = extractHeaderData(headerData);
+  return <PostHeader header={header} />;
 }
 
 const PostHeader = ({ header }: { header: PostHeaderProps }) => {
@@ -45,12 +60,10 @@ const PostHeader = ({ header }: { header: PostHeaderProps }) => {
       <h1 className="text-4xl font-bold text-white mb-8">{header.title}</h1>
 
       <div className="grid grid-cols-[auto_auto_1fr] gap-x-4 gap-y-4 mb-8 items-start">
-        {/* 작성일 */}
         <MetadataRow icon="📅" label="작성일">
           <span className="text-base text-gray-300">{header.createdDate}</span>
         </MetadataRow>
 
-        {/* 태그 */}
         <MetadataRow icon="🏷️" label="태그">
           <TagList tags={header.tags} />
         </MetadataRow>
