@@ -1,7 +1,7 @@
 import NotionCard from "@/components/notion/NotionCard";
 import { fetchNotionDatabaseQuery } from "@/lib/notion";
 import { DatabaseObjectResponse } from "@notionhq/client/build/src/api-endpoints";
-import { formatProjectPeriod, sortByPin } from "@/lib/util";
+import { formatProjectPeriod } from "@/lib/util";
 import { NotionTagType } from "@/types/notion";
 
 export default async function ProjectsPage() {
@@ -11,7 +11,7 @@ export default async function ProjectsPage() {
 
   const datas = await fetchNotionDatabaseQuery(databaseId);
 
-  const sortedDatas = sortByPin(datas);
+  const sortedDatas = sortByPinThenStartDate(datas);
 
   return (
     <main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
@@ -77,4 +77,29 @@ function extractProjectData(projectData: ProjectForView) {
     url: projectData.url,
     isPinned,
   };
+}
+
+function sortByPinThenStartDate(items: DatabaseObjectResponse[]) {
+  // 핀 우선, 동일 그룹 내에서는 기간.start 최신순(desc)
+  return [...items].sort((a, b) => {
+    const aAny = a as unknown as ProjectForView;
+    const bAny = b as unknown as ProjectForView;
+
+    const aPinned = aAny.properties?.PIN?.checkbox || false;
+    const bPinned = bAny.properties?.PIN?.checkbox || false;
+
+    if (aPinned !== bPinned) return aPinned ? -1 : 1;
+
+    const aStart = aAny.properties?.기간?.date?.start || null;
+    const bStart = bAny.properties?.기간?.date?.start || null;
+
+    if (!aStart && !bStart) return 0;
+    if (!aStart) return 1; // 시작일 없는 항목은 뒤로
+    if (!bStart) return -1;
+
+    const aTime = new Date(aStart).getTime();
+    const bTime = new Date(bStart).getTime();
+
+    return bTime - aTime; // 최신 먼저
+  });
 }

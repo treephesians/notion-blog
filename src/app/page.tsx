@@ -33,6 +33,12 @@ export default async function Home() {
 
   const datas: ExternalPost[] = await res.json();
 
+  // isPinned가 true인 항목을 앞으로 정렬 (stable sort 보장 위해 키 분리)
+  const sorted = [
+    ...datas.filter((p) => p.isPinned),
+    ...datas.filter((p) => !p.isPinned),
+  ];
+
   return (
     <main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
       <div className="relative w-full mb-16">
@@ -74,7 +80,7 @@ export default async function Home() {
       </div>
       <p className="text-xl font-bold text-white-500 mb-5">Blog Posts</p>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {datas.map((post) => (
+        {sorted.map((post) => (
           <NotionCard
             key={post.id}
             img_url={toAbsoluteUrl(post.coverUrl)}
