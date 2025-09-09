@@ -47,6 +47,10 @@ body {
   border-radius: 5px !important;
 }
 
+.notion-callout {
+  border-radius: 10px !important;
+}
+
 .notion-page,
 .notion-page-content,
 .notion-page-content-inner {
@@ -54,7 +58,7 @@ body {
   overflow-x: hidden !important;
   box-sizing: border-box !important;
 }
-
+  
 .notion-text {
   margin-bottom: 0.3rem !important;
 }
@@ -75,27 +79,33 @@ body {
   font-weight: 700 !important;
 }
 
-.notion-red_background {
+.notion-red_background,
+.notion-red_background_co {
   background-color: #4c2826 !important;
 }
 
-.notion-teal_background {
+.notion-teal_background,
+.notion-teal_background_co {
   background-color: #1e352b !important;
 }
 
-.notion-blue_background {
+.notion-blue_background,
+.notion-blue_background_co {
   background-color: #053444 !important;
 }
 
-.notion-purple_background {
+.notion-purple_background,
+.notion-purple_background_co {
   background-color: #35293f !important;
 }
 
-.notion-pink_background {
+.notion-pink_background,
+.notion-pink_background_co {
   background-color: #472734 !important;
 }
 
-.notion-yellow_background {
+.notion-yellow_background,
+.notion-yellow_background_co {
   background-color: #4f3a26 !important;
 }
 

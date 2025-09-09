@@ -11,7 +11,12 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    domains: ["prod-files-secure.s3.us-west-2.amazonaws.com", "static.toss.im"],
+    domains: [
+      "prod-files-secure.s3.us-west-2.amazonaws.com",
+      "static.toss.im",
+      "3.35.11.18",
+      "localhost",
+    ],
   },
 };
 

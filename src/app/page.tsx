@@ -1,22 +1,37 @@
 import NotionCard from "@/components/notion/NotionCard";
-import { fetchNotionDatabaseQuery } from "@/lib/notion";
-import { NotionFilter, PostHeaderType } from "@/types/notion";
-import { DatabaseObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import { NotionTagType } from "@/types/notion";
 import Image from "next/image";
 
+export const revalidate = 0;
+
+type ExternalPost = {
+  id: string;
+  coverUrl: string | null;
+  title: string;
+  tags: NotionTagType[];
+  createdDate?: string | null;
+  isPinned?: boolean;
+};
+
+const API_URL = process.env.NOTION_BLOG_API_URL;
+
+function toAbsoluteUrl(path: string | null): string {
+  if (!path) return "/file.svg";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  return `http://${API_URL}${path}`;
+}
+
 export default async function Home() {
-  const databaseId = process.env.POST_DATABASE_ID;
+  const res = await fetch(`http://${API_URL}/notion/posts`, {
+    // 캐시 재검증 간격 조정 (필요 시 변경)
+    //next: { revalidate: 60 },
+  });
 
-  if (databaseId === undefined) return null;
+  if (!res.ok) {
+    throw new Error("Failed to fetch posts from external API");
+  }
 
-  const filter: NotionFilter = {
-    property: "상태",
-    status: {
-      equals: "완료",
-    },
-  };
-
-  const datas = await fetchNotionDatabaseQuery(databaseId, filter);
+  const datas: ExternalPost[] = await res.json();
 
   return (
     <main className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
@@ -59,23 +74,16 @@ export default async function Home() {
       </div>
       <p className="text-xl font-bold text-white-500 mb-5">Blog Posts</p>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {datas.map((data: DatabaseObjectResponse) => {
-          const page = data as unknown as PostHeaderType;
-          const coverUrl =
-            page.cover?.file?.url ?? page.cover?.external?.url ?? "/file.svg";
-          const title = page.properties.이름.title[0]?.plain_text ?? "Untitled";
-          const tags = page.properties.태그.multi_select ?? [];
-
-          return (
-            <NotionCard
-              key={data.id}
-              img_url={coverUrl}
-              title={title}
-              tags={tags}
-              pageId={page.id}
-            />
-          );
-        })}
+        {datas.map((post) => (
+          <NotionCard
+            key={post.id}
+            img_url={toAbsoluteUrl(post.coverUrl)}
+            title={post.title}
+            tags={post.tags}
+            pageId={post.id}
+            isPinned={post.isPinned}
+          />
+        ))}
       </div>
     </main>
   );

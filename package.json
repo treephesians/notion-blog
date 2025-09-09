@@ -4,8 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:local": "NOTION_BLOG_API_URL=localhost:8000 next dev --turbopack",
+    "dev:remote": "NOTION_BLOG_API_URL=3.35.11.18:8000 next dev --turbopack",
     "build": "next build",
     "start": "next start",
+    "start:local": "NOTION_BLOG_API_URL=localhost:8000 next start",
+    "start:remote": "NOTION_BLOG_API_URL=3.35.11.18:8000 next start",
     "lint": "next lint"
   },
   "dependencies": {
