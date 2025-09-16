@@ -1,11 +1,10 @@
-import { fetchNotionPageQuery, getData } from "@/lib/notion";
+import { getData } from "@/lib/notion";
 
 import "react-notion-x/src/styles.css";
 import "prismjs/themes/prism-tomorrow.css";
 import "katex/dist/katex.min.css";
 import Renderer from "@/components/notion/Render";
-import { NotionProjectHeader, NotionTagType } from "@/types/notion";
-import { formatProjectPeriod } from "@/lib/util";
+import { NotionTagType } from "@/types/notion";
 import CoverImage from "@/components/notion/CoverImage";
 import MetadataRow from "@/components/notion/MetadataRow";
 import TagList from "@/components/notion/TagList";
@@ -34,10 +33,7 @@ interface ProjectHeaderProps {
 export default async function Page({ params }: ProjectPageProps) {
   const { projectId } = await params;
   const data = await getData(projectId);
-  const headerData = await fetchNotionPageQuery(projectId);
-  const header = extractProjectHeaderData(
-    headerData as unknown as NotionProjectHeader
-  );
+  const header = await fetchExternalProjectHeader(projectId);
   return (
     <main className="bg-[#1D1D1D]">
       <ProjectHeader header={header} />
@@ -46,39 +42,46 @@ export default async function Page({ params }: ProjectPageProps) {
   );
 }
 
-function extractProjectHeaderData(
-  page: NotionProjectHeader
-): ProjectHeaderProps {
-  const coverUrl = page.cover?.file?.url ?? page.cover?.external?.url ?? null;
-  const title = page.properties.이름?.title?.[0]?.plain_text ?? "Untitled";
-  const tags = page.properties.기술?.multi_select ?? [];
-  const createdDate = null;
+const API_URL = process.env.NOTION_BLOG_API_URL;
 
-  const dateRange = page.properties.기간?.date;
-  const period = dateRange?.start
-    ? formatProjectPeriod(dateRange.start, dateRange.end)
-    : null;
+function toAbsoluteUrl(path: string | null): string | null {
+  if (!path) return null;
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  return `http://${API_URL}${path}`;
+}
 
-  const site = page.properties.사이트?.url ?? null;
-  const github = page.properties.GitHub?.url ?? null;
-  // 회고는 relation 타입이므로 연결된 페이지 ID 추출
-  const reviewPageId =
-    page.properties.회고?.relation && page.properties.회고.relation.length > 0
-      ? page.properties.회고.relation[0].id
-      : null;
-  const type = page.properties.종류?.select ?? null;
-
+async function fetchExternalProjectHeader(
+  projectId: string
+): Promise<ProjectHeaderProps> {
+  const res = await fetch(`http://${API_URL}/notion/projects/${projectId}`, {
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch project header from external API");
+  }
+  const json = (await res.json()) as {
+    id: string;
+    coverUrl: string | null;
+    title: string;
+    tags: NotionTagType[];
+    createdDate: string | null;
+    period: string | null;
+    site: string | null;
+    github: string | null;
+    reviewPageId: string | null;
+    type: { name: string; color: string } | null;
+  };
   return {
-    id: page.id,
-    coverUrl,
-    title,
-    tags,
-    createdDate,
-    period,
-    site,
-    github,
-    reviewPageId,
-    type,
+    id: json.id,
+    coverUrl: toAbsoluteUrl(json.coverUrl),
+    title: json.title,
+    tags: json.tags,
+    createdDate: json.createdDate,
+    period: json.period,
+    site: json.site,
+    github: json.github,
+    reviewPageId: json.reviewPageId,
+    type: json.type,
   };
 }
 
