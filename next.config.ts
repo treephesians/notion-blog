@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
       "prod-files-secure.s3.us-west-2.amazonaws.com",
       "static.toss.im",
       "3.35.11.18",
-      "13.209.88.95"
+      "13.209.88.95",
       "localhost",
     ],
   },
