@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
       "3.35.11.18",
       "13.209.88.95",
       "localhost",
+      "3.39.190.76",
     ],
   },
 };
